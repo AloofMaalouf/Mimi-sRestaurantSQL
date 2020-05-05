@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `shift`;
 DROP TABLE IF EXISTS `party_table`;
 DROP TABLE IF EXISTS `party`;
 DROP TABLE IF EXISTS `payment`;
-DROP TABLE IF EXISTS `mini_business`;
+DROP TABLE IF EXISTS `mimi_business`;
 DROP TABLE IF EXISTS `online_order`;
 DROP TABLE IF EXISTS `phone_order`;
 DROP TABLE IF EXISTS `to_go`;
@@ -317,13 +317,13 @@ CREATE TABLE `online_order` (
   CONSTRAINT `online_order_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `to_go` (`customer_name`)
 );
 
-CREATE TABLE `mini_business` (
+CREATE TABLE `mimi_business` (
   `customer_name` varchar(20) NOT NULL,
   `corporation_name` varchar(20) NOT NULL,
   `department` varchar(50) NOT NULL,
   `contact_phone` int(10) NOT NULL,
   PRIMARY KEY (`customer_name`, `corporation_name`),
-  CONSTRAINT `mini_business_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
+  CONSTRAINT `mimi_business_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
 );
 
 CREATE TABLE `payment` (

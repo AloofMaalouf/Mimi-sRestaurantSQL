@@ -29,21 +29,21 @@ insert  into `dine_in`(`seatID` ,`tableID` ,`sectionId`) values
 (7, 21, 2);
 
 insert  into `employee`(`empID` ,`fname` ,`lname` ,`phone`) values 
-(1, "George", "Washington", 1234567890),
-(2, "Abraham", "Lincoln", 2324543685),
-(3, "John", "Kennedy", 3426894596),
-(4, "Franklin", "Roosevelt", 2359543679),
-(5, "Ronald", "Reagan", 4355068036),
-(6, "George", "Bush", 2334859276),
-(7, "Barack", "Obama", 3048502845),
-(8, "David", "Brown", 9234576453),
-(9, "LeBron", "James", 9234676453),
-(10, "Michael", "Jordan", 9234846453),
-(11, "Kobe", "Bryant", 6572846453),
-(12, "Kevin", "Durant", 7878746473);
+(1, "George", "Washington", "1234567890"),
+(2, "Abraham", "Lincoln", "2324543685"),
+(3, "John", "Kennedy", "3426894596"),
+(4, "Franklin", "Roosevelt", "2359543679"),
+(5, "Ronald", "Reagan", "4355068036"),
+(6, "George", "Bush", "2334859276"),
+(7, "Barack", "Obama", "3048502845"),
+(8, "David", "Brown", "9234576453"),
+(9, "LeBron", "James", "9234676453"),
+(10, "Michael", "Jordan", "9234846453"),
+(11, "Kobe", "Bryant", "6572846453"),
+(12, "Kevin", "Durant", "7878746473");
 
 
-insert  into `full-time`(`empID`, `payrate`) values 
+insert  into `full_time`(`empID`, `payrate`) values 
 (1, 23000),
 (2, 32500),
 (4, 54000),
@@ -101,27 +101,27 @@ insert  into `ingredient`(`ingredient`) values
 ("Tomatoes");
 
 insert  into `dish`(`ingredient`, `empID`, `dish_name`) values 
-("Beef", 1, "Beef Tacos"),
-("Milk", 1, "Milk Spagetti"),
-("Cheese", 1, "Cheeseburger");
+("Beef", 1, "Tacos"),
+("Milk", 1, "Spagetti"),
+("Cheese", 1, "Burger");
 
 insert  into `menu_item`(`dish_name` ,`dish_type` ,`description`) values 
-("Beef Tacos", "Tacos", "Tacos with beef"),
-("Milk Spagetti", "Spagetti", "Spagetti with a milk sauce"),
-("Cheeseburger", "Burger", "Burger with cheese");
+("Tacos", "Tacos", "Tacos with beef"),
+("Spagetti", "Spagetti", "Spagetti with a milk sauce"),
+("Burger", "Burger", "Burger with cheese");
 
 insert  into `mastered_dish`(`dish_name`) values 
-("Beef Tacos"),
-("Milk Spagetti");
+("Tacos"),
+("Spagetti");
 
 insert  into `mentorship`(`studentID` , `sous_teacher`, `dish_name`, `start_date`, `end_date`) values 
-(2, 7, "Beef Tacos", 01/01/2013, 05/14/2013),
-(2, 8, "Milk Spagetti", 04/06/2018, 07/02/2019),
-(8, 9, "Milk Spagetti", 07/13/2012, 09/12/2012);
+(2, 7, "Tacos", 01/01/2013, 05/14/2013),
+(2, 8, "Spagetti", 04/06/2018, 07/02/2019),
+(8, 9, "Spagetti", 07/13/2012, 09/12/2012);
 
-insert  into `sous_chef_dish`(`studentID`, `dish_name`) values 
-(2, "Beef Tacos"),
-(8, "Milk Spagetti");
+insert  into `sous_chef_dish`(`empID`, `dish_name`) values 
+(2, "Tacos"),
+(8, "Spagetti");
 
 insert  into `part_time`(`empID`, `wage`) values 
 (3, 25689),
@@ -150,9 +150,9 @@ insert  into `spice_rating`(`rating_name`) values
 ("Very Hot");
 
 insert  into `menu`(`menu_type`, `dish_name`, `start_time`, `end_time`) values 
-("Breakfast", "Cheeseburger", "08:00:00", "10:59:59"),
-("Lunch", "Beef Tacos", "11:00:00", "15:59:59"),
-("Dinner", "Milk Spagetti", "16:00:00", "07:59:59");
+("Breakfast", "Burger", "08:00:00", "10:59:59"),
+("Lunch", "Tacos", "11:00:00", "15:59:59"),
+("Dinner", "Spagetti", "16:00:00", "07:59:59");
 
 
 insert  into `buffet_menu`(`menu_type`, `price_for_buffet`) values 
@@ -165,19 +165,17 @@ insert  into `kids_menu`(`menu_type`, `price_to_color`, `age`) values
 ("Dinner", 3.99, 10);
 
 insert  into `menu_to_item`(`menu_type`, `dish_name`, `meat_name`, `rating_name`, `price`) values 
-("Breakfast", "Cheeseburger", "Beef", "Hot", 8.99),
-("Lunch", "Beef Tacos", "Beef", "Very Hot", "12.99"),
-("Dinner", "Milk Spagetti", "Mild", "14.99");
+("Breakfast", "Burger", "Beef", "Hot", 8.99),
+("Lunch", "Tacos", "Beef", "Very Hot", "12.99"),
+("Dinner", "Spagetti", "Chicken", "Mild", "14.99");
 
-insert  into `customer`(`customer_name`, `payment_name`, `customer_email`, `customer_balance`, `street_name_number`, `zipcode`, `account_number`) values 
-("John Smith", "Credit Card", "john_smith@gmail.com", 25.45, "123 Main St.", 12345, 12345678900987654321),
-("James Harden", "Cash", "abcdef@gmail.com", 54.35, "763 1st St.", 54374, 73575678973577654876);
+insert  into `customer`(`customer_name`, `payment_name`, `customer_email`, `current_balance`, `street_name_number`, `zipcode`, `account_number`) values 
+("John Smith", "Credit Card", "john_smith@gmail.com", 25.45, "123 Main St.", 12345, 1234567890),
+("James Harden", "Cash", "abcdef@gmail.com", 54.35, "763 1st St.", 54374, 73575678973);
 
 
 insert  into `order`(`customer_name`, `date`, `time`, `comments`, `total`) values 
-("John Smith", "03/04/2019", "20:45:34", "Delicious meal", 123.67),
-("John Smith", "12/04/2018", "19:54:32", "Fantastic food", 67.47),
-("James Harden", "10/31/2018", "21:08:31", "Good taste", 231.43);
-
+("John Smith", "2019-03-04", "20:45:34", "Delicious meal", 123.67),
+("James Harden", "2018-10-31", "21:08:31", "Good taste", 231.43);
 
 

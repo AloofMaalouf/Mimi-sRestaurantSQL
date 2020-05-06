@@ -220,3 +220,10 @@ insert into `scheduled_shift`(`empID`, `shift_date`, `start`, `end`) values
 (2, '2020-03-04', '17:00:00', '21:00:00'),
 (7, '2020-03-04', '17:00:00', '21:00:00');
 
+ insert  into `bill_item`(`customer_name`, `date_ordered`, `time_ordered`, `dish_name`) values
+("Big Spender", '2019-06-10', '17:31:38', "Burger"),
+('John Smith', '2020-03-04', '11:55:30', "Burger"),
+('Sum Dude', '2020-03-15', '12:16:13', "Burger"),
+('Clayton Kershaw', '2019-07-30', '14:28:32', "Burger"),
+('Pedro Biaz', '2020-01-02', '15:29:31', "Spagetti"),
+('Peggy Sue', '2020-02-28', '16:30:39', "Tacos");

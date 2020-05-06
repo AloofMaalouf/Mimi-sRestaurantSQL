@@ -15,8 +15,8 @@ CREATE VIEW Customer_addresses_v AS
 SELECT c.customer_name, c.customer_email, c.current_balance, c.street_name_number, c.zipcode, c.account_number,
 CASE c.customer_name
     WHEN c.customer_name IN (SELECT m.customer_name FROM mimi_business m 
-        NATURAL JOIN customer c WHERE m.customer_name = c.customer_name) THEN 'Corporate'
-    ELSE 'Individual'
+        NATURAL JOIN customer c WHERE m.customer_name = c.customer_name) THEN 'Individual'
+    ELSE 'Corporate'
 END AS customer_type
 FROM customer AS c;
 
@@ -37,14 +37,14 @@ ORDER BY e1.fname, e1.lname, e.fname, e.lname;
 CREATE VIEW Customer_Sales_v AS 
 SELECT customer.customer_name AS "NAME", YEAR(orders.date_ordered) AS "YEAR", SUM(orders.total) AS "TOTAL"
 FROM customer INNER JOIN orders on customer.customer_name = orders.customer_name
-GROUP BY customer.customer_name, orders.date_ordered;
+GROUP BY customer.customer_name, YEAR(orders.date_ordered);
 
 # 5  Customer_Value_v – List each customer and the total $ amount of their orders for the
 # past year (365 days), in order of the value of customer orders, from highest to the lowest.
 
 CREATE VIEW Customer_Value_v AS
-SELECT customer_name AS "NAME", SUM(total) AS "Past Year Total"
-FROM customer NATURAL JOIN orders --on customer.customer_name = orders.customer_name
-WHERE date_ordered > NOW() - YEAR(1) AND date_ordered < NOW()
-GROUP BY customer_name
+SELECT customer.customer_name AS "NAME", SUM(total) AS "Past Year Total"
+FROM customer RIGHT JOIN orders on customer.customer_name = orders.customer_name
+WHERE date_ordered > YEAR(NOW()) - 1 AND date_ordered < NOW()
+GROUP BY customer.customer_name
 ORDER BY SUM(total);

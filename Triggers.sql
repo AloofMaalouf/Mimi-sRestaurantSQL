@@ -1,4 +1,5 @@
-/* 1. */
+/* 1. 
+Stops a waitstaff employee from being assigned to more than 1 section*/
 DROP TRIGGER IF EXISTS `323termproject`.`wait_staff_BEFORE_INSERT`;
 
 DELIMITER $$
@@ -11,7 +12,8 @@ end if;
 END$$
 DELIMITER ;
 
-/* 3. */
+/* 2. 
+Stops the added section from having more than 5 tables*/
 DROP TRIGGER IF EXISTS `323termproject`.`section_BEFORE_INSERT`;
 
 DELIMITER $$
@@ -24,12 +26,13 @@ end if;
 END$$
 DELIMITER ;
 
-/* 3. */
-DROP TRIGGER IF EXISTS `323termproject`.`cook_station_BEFORE_INSERT`;
+/* 3. 
+Stops a station from having more than 2 line cooks when a new cook is added*/
+DROP TRIGGER IF EXISTS `323termproject`.`station_assignment_BEFORE_INSERT`;
 
 DELIMITER $$
 USE `323termproject`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `cook_station_BEFORE_INSERT` BEFORE INSERT ON `cook_station` FOR EACH ROW
+CREATE DEFINER=`root`@`localhost` TRIGGER `station_assignment_BEFORE_INSERT` BEFORE INSERT ON `station_assignment` FOR EACH ROW
 BEGIN
 if sum(empID) > 2 THEN
 	signal sqlstate '45000' set message_text = 'Each station can have at most 2 cooks';
@@ -37,19 +40,22 @@ end if;
 END$$
 DELIMITER ;
 
-/* 4. */
+/* 4. 
+Stops the insertion of a new station assignment for a cook that already has the maximum of 3 stations
+assigned to them*/
 DROP TRIGGER IF EXISTS `323termproject`.`station_assignment_BEFORE_INSERT`;
 
 DELIMITER $$
 USE `323termproject`$$
 CREATE DEFINER=`root`@`localhost` TRIGGER `station_assignment_BEFORE_INSERT` BEFORE INSERT ON `station_assignment` FOR EACH ROW BEGIN
-if (select empID from station_assignment where empID = new.empID) > 3 THEN
+if (select count(empID) from station_assignment where empID = new.empID) > 3 THEN
 	signal sqlstate '45000' set message_text = 'Each line cook can have at most 3 stations assigned to them';
 end if;
 END$$
 DELIMITER ;
 
-/* 5. */
+/* 5.
+Stops the insertion of a scheduled shift without having at least 1 maitre d*/
 DROP TRIGGER IF EXISTS `323termproject`.`scheduled_shift_BEFORE_INSERT`;
 
 DELIMITER $$
@@ -69,7 +75,7 @@ end if;
 END$$
 DELIMITER ;
 
-
+/*Stops the deletion of a scheduled shift that would lead to there not being at least 1 maitre d per shift*/
 DROP TRIGGER IF EXISTS `323termproject`.`scheduled_shift_BEFORE_DELETE`;
 
 DELIMITER $$

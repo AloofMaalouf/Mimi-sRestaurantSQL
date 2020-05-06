@@ -174,7 +174,7 @@ insert  into `customer`(`customer_name`, `payment_name`, `customer_email`, `curr
 ("James Harden", "Cash", "abcdef@gmail.com", 54.35, "763 1st St.", 54374, 73575678973);
 
 
-insert  into `order`(`customer_name`, `date`, `time`, `comments`, `total`) values 
+insert  into `orders`(`customer_name`, `date_ordered`, `time_ordered`, `comments`, `total`) values 
 ("John Smith", "2019-03-04", "20:45:34", "Delicious meal", 123.67),
 ("James Harden", "2018-10-31", "21:08:31", "Good taste", 231.43);
 

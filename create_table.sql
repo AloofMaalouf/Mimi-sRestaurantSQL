@@ -238,7 +238,6 @@ CREATE TABLE `spice_rating` (
 
 CREATE TABLE `menu` (
   `menu_type` varchar(20) NOT NULL,
-  `dish_name` varchar(50) NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   PRIMARY KEY (`menu_type`)
@@ -253,7 +252,7 @@ CREATE TABLE `buffet_menu` (
 
 CREATE TABLE `kids_menu` (
   `menu_type` varchar(20) NOT NULL,
-  `price_to_color` int(10) NOT NULL,
+  `price_to_color` varchar(20) NOT NULL,
   `age` int(2) NOT NULL,
   PRIMARY KEY (`menu_type`),
   CONSTRAINT `kids_menu_fk_1` FOREIGN KEY (`menu_type`) REFERENCES `menu` (`menu_type`)
@@ -285,43 +284,48 @@ CREATE TABLE `customer` (
 );
 
 CREATE TABLE `orders` (
+  `orderID` int(10) NOT NULL,
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,
   `time_ordered` time NOT NULL,
+  `payment_name` varchar(20) NOT NULL,
   `comments` varchar(50) NOT NULL,
   `total` int(10) NOT NULL,
-  PRIMARY KEY (`customer_name`),
+  PRIMARY KEY (`orderID`),
   CONSTRAINT `orders_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
 );
 
 CREATE TABLE `to_go` (
+  `orderID` int(10) NOT NULL,
   `customer_name` varchar(20) NOT NULL,
   `time_ready` time NOT NULL,
   `payment_method` varchar(20) NOT NULL,
   `time_picked_up` time NOT NULL,
-  PRIMARY KEY (`customer_name`),
-  CONSTRAINT `to_go_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `orders` (`customer_name`)
+  PRIMARY KEY (`orderID`),
+  CONSTRAINT `to_go_fk_1` FOREIGN KEY (`orderID`) REFERENCES `orders` (`orderID`)
 );
 
 CREATE TABLE `phone_order` (
+  `orderID` int(10) NOT NULL,
   `customer_name` varchar(20) NOT NULL,
-  `phone_number` int(10) NOT NULL,
-  PRIMARY KEY (`customer_name`),
-  CONSTRAINT `phone_order_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `to_go` (`customer_name`)
+  `phone_number` varchar(10) NOT NULL,
+  PRIMARY KEY (`orderID`),
+  CONSTRAINT `phone_order_fk_1` FOREIGN KEY (`orderID`) REFERENCES `to_go` (`orderID`)
 );
 
 CREATE TABLE `online_order` (
+  `orderID` int(10) NOT NULL,
   `customer_name` varchar(20) NOT NULL,
   `card_credentials` varchar(20) NOT NULL,
   PRIMARY KEY (`customer_name`),
-  CONSTRAINT `online_order_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `to_go` (`customer_name`)
+  CONSTRAINT `online_order_fk_1` FOREIGN KEY (`orderID`) REFERENCES `to_go` (`orderID`)
 );
 
 CREATE TABLE `mimi_business` (
   `customer_name` varchar(20) NOT NULL,
   `corporation_name` varchar(20) NOT NULL,
   `department` varchar(50) NOT NULL,
-  `contact_phone` int(10) NOT NULL,
+  `contact_phone` varchar(10) NOT NULL,
   PRIMARY KEY (`customer_name`, `corporation_name`),
   CONSTRAINT `mimi_business_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
 );

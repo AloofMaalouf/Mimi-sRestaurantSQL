@@ -1,3 +1,4 @@
+#Tables are dropped if they already exist
 DROP TABLE IF EXISTS `bill_item`;
 DROP TABLE IF EXISTS `scheduled_shift`;
 DROP TABLE IF EXISTS `shift`;
@@ -41,7 +42,7 @@ DROP TABLE IF EXISTS `seat`;
 DROP TABLE IF EXISTS `Table`;
 DROP TABLE IF EXISTS `section`;
 
-
+#Section for tables with a unique ID, number of tables and maximum capacity
 CREATE TABLE `section` (
   `sectionID` int NOT NULL,
   `numTables` int NOT NULL,
@@ -49,6 +50,7 @@ CREATE TABLE `section` (
   PRIMARY KEY (`sectionId`)
 );
 
+#Table where customers sit at with a unique ID, section ID where it is located, and a max capacity
 CREATE TABLE `Table` (
   `tableID` int NOT NULL,
   `sectionID` int NOT NULL,
@@ -57,6 +59,7 @@ CREATE TABLE `Table` (
   CONSTRAINT `table_fk_1` FOREIGN KEY (`sectionID`) REFERENCES `section` (`sectionID`)
 );
 
+#Seat at a able that a person can occupy with a unique ID, table is at, and position at the table
 CREATE TABLE `seat` (
   `seatID` int NOT NULL,
   `tableID` int NOT NULL,
@@ -65,6 +68,7 @@ CREATE TABLE `seat` (
   CONSTRAINT `seat_fk_1` FOREIGN KEY (`tableID`) REFERENCES `Table` (`tableID`)
 );
 
+#Represents a customer who decides to dine-in at the restaurant at a seat at a table
 CREATE TABLE `dine_in` (
   `seatID` int NOT NULL,
   `tableID` int NOT NULL,
@@ -72,6 +76,7 @@ CREATE TABLE `dine_in` (
   CONSTRAINT `dine_in_fk_1` FOREIGN KEY (`seatID`, `tableID`) REFERENCES `seat` (`seatID`, `tableID`)
 );
 
+#Employee working at the restaurant with a unique ID, name, and phone number
 CREATE TABLE `employee` (
   `empID` int NOT NULL,
   `fname` varchar(30) NOT NULL,
@@ -80,6 +85,7 @@ CREATE TABLE `employee` (
   PRIMARY KEY (`empID`)
 );
 
+#Employee that works full-time with a unique ID and payrate
 CREATE TABLE `full_time` (
   `empID` int NOT NULL,
   `payrate` int NOT NULL,
@@ -87,28 +93,34 @@ CREATE TABLE `full_time` (
   CONSTRAINT `full_time_fk_1` FOREIGN KEY (`empID`) REFERENCES `employee` (`empID`)
 );
 
+#Full-time employee that functions as the manager of the restaurant
 CREATE TABLE `manager` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `manager_fk_1` FOREIGN KEY (`empID`) REFERENCES `full_time` (`empID`)
 );
 
+#Full-time employee that works as a chef at the restaurant
 CREATE TABLE `chef` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `chef_fk_1` FOREIGN KEY (`empID`) REFERENCES `full_time` (`empID`)
 );
+
+#Chef that works as a line cook
 CREATE TABLE `line_cook` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `line_cook_fk_1` FOREIGN KEY (`empID`) REFERENCES `chef` (`empID`)
 );
 
+#Station where line cooks can be assigned with a unique name for each station
 CREATE TABLE `cook_station` (
   `station_name` varchar(50) NOT NULL,
   PRIMARY KEY (`station_name`)
 );
 
+#Assignment for the line cooks at the stations
 CREATE TABLE `station_assignment` (
   `station_name` varchar(50) NOT NULL,
   `empID` int NOT NULL,
@@ -117,17 +129,21 @@ CREATE TABLE `station_assignment` (
   CONSTRAINT `station_assignment_fk_2` FOREIGN KEY (`empID`) REFERENCES `line_cook` (`empID`)
 );
 
+#Chef who works as a sous chef
 CREATE TABLE `sous_chef` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `sous_chef_fk_1` FOREIGN KEY (`empID`) REFERENCES `chef` (`empID`)
 );
 
+#Chef that works as the head chef
 CREATE TABLE `head_chef` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `head_chef_fk_1` FOREIGN KEY (`empID`) REFERENCES `chef` (`empID`)
 );
+
+#Recipe that the head shef makes with a unique dish name
 CREATE TABLE `recipe` (
   `empID` int NOT NULL,
   `dish_name` varchar(50) NOT NULL,
@@ -135,11 +151,13 @@ CREATE TABLE `recipe` (
   CONSTRAINT `recipe_fk_1` FOREIGN KEY (`empID`) REFERENCES `head_chef` (`empID`)
 );
 
+#Ingredient for the food
 CREATE TABLE `ingredient` (
   `ingredient` varchar(50) NOT NULL,
   PRIMARY KEY (`ingredient`)
 );
 
+#Dish made with an ingredient from the chef's recipe
 CREATE TABLE `dish` (
   `ingredient` varchar(50) NOT NULL,
   `dish_name` varchar(50) NOT NULL,
@@ -147,6 +165,8 @@ CREATE TABLE `dish` (
   CONSTRAINT `dish_fk_1` FOREIGN KEY (`ingredient`) REFERENCES `ingredient` (`ingredient`),
   CONSTRAINT `dish_fk_2` FOREIGN KEY (`dish_name`) REFERENCES `recipe` (`dish_name`)
 );
+
+#Item in the menu that has a unique name and has a type and description
 CREATE TABLE `menu_item` (
   `dish_name` varchar(50) NOT NULL,
   `dish_type` varchar(50) NOT NULL,
@@ -155,12 +175,14 @@ CREATE TABLE `menu_item` (
   CONSTRAINT `menu_item_fk_1` FOREIGN KEY (`dish_name`) REFERENCES `recipe` (`dish_name`)
 );
 
+#Dish mastered by a chef
 CREATE TABLE `mastered_dish` (
   `dish_name` varchar(50) NOT NULL,
   PRIMARY KEY (`dish_name`),
   CONSTRAINT `mastered_dish_fk_1` FOREIGN KEY (`dish_name`) REFERENCES `menu_item` (`dish_name`)
 );
 
+#Mentorship relationship between one sous chef and another with a start and end date of the teaching
 CREATE TABLE `mentorship` (
   `studentID` int NOT NULL,
   `sous_teacher` int NOT NULL,
@@ -173,6 +195,7 @@ CREATE TABLE `mentorship` (
   CONSTRAINT `mentorship_fk_3` FOREIGN KEY (`dish_name`) REFERENCES `mastered_dish` (`dish_name`)
 );
 
+#Dish prepared by the sous chef as a mastered dish
 CREATE TABLE `sous_chef_dish` (
   `empID` int NOT NULL,
   `dish_name` varchar(50) NOT NULL,
@@ -181,6 +204,7 @@ CREATE TABLE `sous_chef_dish` (
   CONSTRAINT `sous_chef_dish_fk_2` FOREIGN KEY (`dish_name`) REFERENCES `mastered_dish` (`dish_name`)
 );
 
+#Employee that works at the restaurant part-time wiht a wage
 CREATE TABLE `part_time` (
   `empID` int NOT NULL,
   `wage` int NOT NULL,
@@ -188,6 +212,7 @@ CREATE TABLE `part_time` (
   CONSTRAINT `part_time_fk_1` FOREIGN KEY (`empID`) REFERENCES `employee` (`empID`)
 );
 
+#Wait staff that work as part time workers at a section of the restaurant
 CREATE TABLE `wait_staff` (
   `sectionID` int NOT NULL,
   `empID` int NOT NULL,
@@ -196,28 +221,33 @@ CREATE TABLE `wait_staff` (
   CONSTRAINT `wait_staff_fk_2` FOREIGN KEY (`empID`) REFERENCES `part_time` (`empID`)
 );
 
+#Dish washer that works part time at the restaurant
 CREATE TABLE `dish_washer` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `dish_washer_fk_1` FOREIGN KEY (`empID`) REFERENCES `part_time` (`empID`)
 );
 
+#Maitre d that works part time at the restaruant
 CREATE TABLE `maitre_d` (
   `empID` int NOT NULL,
   PRIMARY KEY (`empID`),
   CONSTRAINT `maitre_d_fk_1` FOREIGN KEY (`empID`) REFERENCES `part_time` (`empID`)
 );
 
+#Meat with a unique name for a dish
 CREATE TABLE `meat` (
   `meat_name` varchar(30) NOT NULL,
   PRIMARY KEY (`meat_name`)
 );
 
+#Rating of the spiciness of a dish
 CREATE TABLE `spice_rating` (
   `rating_name` varchar(30) NOT NULL,
   PRIMARY KEY (`rating_name`)
 );
 
+#Menu that takes place from a start to end time every day at the restaurant
 CREATE TABLE `menu` (
   `menu_type` varchar(20) NOT NULL,
   `start_time` time NOT NULL,
@@ -225,6 +255,7 @@ CREATE TABLE `menu` (
   PRIMARY KEY (`menu_type`)
 );
 
+#Buffet style menu that has a menu type and price to enter
 CREATE TABLE `buffet_menu` (
   `menu_type` varchar(20) NOT NULL,
   `price_for_buffet` float NOT NULL,
@@ -232,6 +263,7 @@ CREATE TABLE `buffet_menu` (
   CONSTRAINT `buffet_menu_fk_1` FOREIGN KEY (`menu_type`) REFERENCES `menu` (`menu_type`)
 );
 
+#Kids style menu that as a picture that can be colored and an age that can participate
 CREATE TABLE `kids_menu` (
   `menu_type` varchar(20) NOT NULL,
   `pic_to_color` varchar(20) NOT NULL,
@@ -240,6 +272,7 @@ CREATE TABLE `kids_menu` (
   CONSTRAINT `kids_menu_fk_1` FOREIGN KEY (`menu_type`) REFERENCES `menu` (`menu_type`)
 );
 
+#Item in the menu with all the details including the menu it is in, meat, spice rating, and price
 CREATE TABLE `menu_to_item` (
   `menu_type` varchar(20) NOT NULL,
   `dish_name` varchar(50) NOT NULL,
@@ -253,11 +286,13 @@ CREATE TABLE `menu_to_item` (
   CONSTRAINT `menu_to_item_fk_4` FOREIGN KEY (`rating_name`) REFERENCES `spice_rating` (`rating_name`)
 );
 
+#Name of the payment a customer makes
 CREATE TABLE `payment` (
   `payment_name` varchar(20) NOT NULL,
   PRIMARY KEY (`payment_name`)
 );
 
+#Customer at the restaurant with their personal details stored
 CREATE TABLE `customer` (
   `customer_name` varchar(20) NOT NULL,
   `customer_email` varchar(20) NOT NULL,
@@ -268,6 +303,7 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`customer_name`)
 );
 
+#Order the customer makes with a date, time, payment name, and total they pay
 CREATE TABLE `order` (
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,
@@ -280,6 +316,7 @@ CREATE TABLE `order` (
   CONSTRAINT `order_fk_2` FOREIGN KEY (`payment_name`) REFERENCES `payment` (`payment_name`)
 );
 
+#Order that a customer makes to leave the restaurant. It is ready at a time and picked up later
 CREATE TABLE `to_go` (
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,
@@ -290,6 +327,7 @@ CREATE TABLE `to_go` (
   CONSTRAINT `to_go_fk_1` FOREIGN KEY (`customer_name`, `date_ordered`, `time_ordered`) REFERENCES `order` (`customer_name`, `date_ordered`, `time_ordered`)
 );
 
+#Order placed over the phone to-go. Phone number used is recorded
 CREATE TABLE `phone_order` (
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,
@@ -299,6 +337,7 @@ CREATE TABLE `phone_order` (
   CONSTRAINT `phone_order_fk_1` FOREIGN KEY (`customer_name`, `date_ordered`, `time_ordered`) REFERENCES `to_go` (`customer_name`, `date_ordered`, `time_ordered`)
 );
 
+#Order placed online with a card that has credentials taken to process
 CREATE TABLE `online_order` (
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,
@@ -308,6 +347,7 @@ CREATE TABLE `online_order` (
   CONSTRAINT `online_order_fk_1` FOREIGN KEY (`customer_name`, `date_ordered`, `time_ordered`) REFERENCES `to_go` (`customer_name`, `date_ordered`, `time_ordered`)
 );
 
+#A customer that is a business so they have more details than an individual
 CREATE TABLE `mimi_business` (
   `customer_name` varchar(20) NOT NULL,
   `corporation_name` varchar(20) NOT NULL,
@@ -317,6 +357,7 @@ CREATE TABLE `mimi_business` (
   CONSTRAINT `mimi_business_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
 );
 
+#Party with many people as listed and one leader
 CREATE TABLE `party` (
   `party_leader` varchar(20) NOT NULL,
   `size` int NOT NULL,
@@ -324,6 +365,7 @@ CREATE TABLE `party` (
   CONSTRAINT `party_fk_1` FOREIGN KEY (`party_leader`) REFERENCES `customer` (`customer_name`)
 );
 
+#Table where the party is taking place at
 CREATE TABLE `party_table` (
   `party_leader` varchar(20) NOT NULL,
   `tableID` int NOT NULL,
@@ -332,6 +374,7 @@ CREATE TABLE `party_table` (
   CONSTRAINT `party_table_fk_2` FOREIGN KEY (`tableID`) REFERENCES `Table` (`tableID`)
 );
 
+#Shift for employees to work in on a specific date with a start and end time
 CREATE TABLE `shift` (
   `shift_date` date NOT NULL,
   `start` time NOT NULL,
@@ -339,6 +382,7 @@ CREATE TABLE `shift` (
   PRIMARY KEY (`shift_date`, `start`, `end`)
 );
 
+#Scheduled shift for an employee
 CREATE TABLE `scheduled_shift` (
   `empID` int NOT NULL,
   `shift_date` date NOT NULL,
@@ -349,6 +393,7 @@ CREATE TABLE `scheduled_shift` (
   CONSTRAINT `scheduled_shift_fk_2` FOREIGN KEY (`shift_date`, `start`, `end`) REFERENCES `shift` (`shift_date`, `start`, `end`)
 );
 
+#Item on the bill for a customer
 CREATE TABLE `bill_item` (
   `customer_name` varchar(20) NOT NULL,
   `date_ordered` date NOT NULL,

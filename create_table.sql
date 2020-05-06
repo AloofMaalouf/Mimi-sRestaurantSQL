@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS `mimi_business`;
 DROP TABLE IF EXISTS `online_order`;
 DROP TABLE IF EXISTS `phone_order`;
 DROP TABLE IF EXISTS `to_go`;
-DROP TABLE IF EXISTS `order`;
+DROP TABLE IF EXISTS `orders`;
 DROP TABLE IF EXISTS `customer`;
 DROP TABLE IF EXISTS `menu_to_item`;
 DROP TABLE IF EXISTS `kids_menu`;
@@ -284,14 +284,14 @@ CREATE TABLE `customer` (
   PRIMARY KEY (`customer_name`)
 );
 
-CREATE TABLE `order` (
+CREATE TABLE `orders` (
   `customer_name` varchar(20) NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
   `comments` varchar(50) NOT NULL,
   `total` int(10) NOT NULL,
   PRIMARY KEY (`customer_name`),
-  CONSTRAINT `order_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
+  CONSTRAINT `orders_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `customer` (`customer_name`)
 );
 
 CREATE TABLE `to_go` (
@@ -300,7 +300,7 @@ CREATE TABLE `to_go` (
   `payment_method` varchar(20) NOT NULL,
   `time_picked_up` time NOT NULL,
   PRIMARY KEY (`customer_name`),
-  CONSTRAINT `to_go_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `order` (`customer_name`)
+  CONSTRAINT `to_go_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `orders` (`customer_name`)
 );
 
 CREATE TABLE `phone_order` (
@@ -368,6 +368,6 @@ CREATE TABLE `bill_item` (
   `customer_name` varchar(20) NOT NULL,
   `dish_name` varchar(50) NOT NULL,
   PRIMARY KEY (`customer_name`, `dish_name`),
-  CONSTRAINT `bill_item_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `order` (`customer_name`),
+  CONSTRAINT `bill_item_fk_1` FOREIGN KEY (`customer_name`) REFERENCES `orders` (`customer_name`),
   CONSTRAINT `bill_item_fk_2` FOREIGN KEY (`dish_name`) REFERENCES `menu_item` (`dish_name`)
 );

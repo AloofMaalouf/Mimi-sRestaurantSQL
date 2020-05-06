@@ -1,0 +1,50 @@
+USE `323termproject`;
+
+# 1 MenuItem_v – For each menu item, give it’s spiciness, and all of the different costs for
+# that item. If a given item is not on a particular menu, then report “N/A” for that particular
+# item for that particular menu. Also, if an item only appears as a single serving portion,
+# put in “N/A” into the report for the gallon, … prices.
+CREATE VIEW MenuItem_v AS 
+SELECT dish_name, rating_name, price
+FROM menu_to_item; --test
+
+# 2 Customer_addresses_v – for each customer, indicate whether they are an individual or a
+# corporate account, and display all of the information that we are managing for that
+# customer.
+CREATE VIEW Customer_addresses_v AS
+SELECT c.customer_name, c.customer_email, c.current_balance, c.street_name_number, c.zipcode, c.account_number,
+CASE c.customer_name
+    WHEN c.customer_name IN (SELECT m.customer_name FROM mimi_business m 
+        NATURAL JOIN customer c WHERE m.customer_name = c.customer_name) THEN 'Corporate'
+    ELSE 'Individual'
+END AS customer_type
+FROM customer AS c;
+
+
+# 3 Sous_mentor_v – reports all the mentor/mentee relationships at Miming’s, sorted by the
+# name of the mentor, then the name of the mentee. Show the skill that the mentorship
+# passes, as well as the start date. ( )
+CREATE VIEW Sous_mentor_v AS
+SELECT e1.fname AS 'Mentor First Name', e1.lname AS 'Mentor Last Name', 
+e.fname AS 'Mentee First Name', e.lname AS 'Mentee Last Name', 
+m.dish_name AS 'Skill passed (dish)', m.start_date AS 'Start Date'
+FROM mentorship AS m LEFT JOIN employee AS e ON m.studentID = e.empID
+LEFT JOIN employee e1 ON m.sous_teacher = e1.empID
+ORDER BY e1.fname, e1.lname, e.fname, e.lname;
+
+# 4 Customer_Sales_v – On a year by year basis, show how much each customer has spent at
+# Miming’s.
+CREATE VIEW Customer_Sales_v AS 
+SELECT customer.customer_name AS "NAME", YEAR(orders.date_ordered) AS "YEAR", SUM(orders.total) AS "TOTAL"
+FROM customer INNER JOIN orders on customer.customer_name = orders.customer_name
+GROUP BY customer.customer_name, orders.date_ordered;
+
+# 5  Customer_Value_v – List each customer and the total $ amount of their orders for the
+# past year (365 days), in order of the value of customer orders, from highest to the lowest.
+
+CREATE VIEW Customer_Value_v AS
+SELECT customer_name AS "NAME", SUM(total) AS "Past Year Total"
+FROM customer NATURAL JOIN orders --on customer.customer_name = orders.customer_name
+WHERE date_ordered > NOW() - YEAR(1) AND date_ordered < NOW()
+GROUP BY customer_name
+ORDER BY SUM(total);

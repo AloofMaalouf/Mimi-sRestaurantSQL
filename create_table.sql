@@ -286,8 +286,8 @@ CREATE TABLE `customer` (
 
 CREATE TABLE `orders` (
   `customer_name` varchar(20) NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
+  `date_ordered` date NOT NULL,
+  `time_ordered` time NOT NULL,
   `comments` varchar(50) NOT NULL,
   `total` int(10) NOT NULL,
   PRIMARY KEY (`customer_name`),
